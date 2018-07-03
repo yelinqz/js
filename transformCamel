@@ -1,0 +1,32 @@
+export const transformCamel = function (data) {
+  if (typeof data === 'object') {
+    if (data instanceof Array) {
+      let arr = []
+      data.map(d => {
+        arr.push(transformCamel(d))
+      })
+      return arr
+    } else {
+      let obj = data ? {} : data
+      for (let key in data) {
+        obj[trans(key)] = data[key]
+      }
+      for (let key in obj) {
+        obj[key] = transformCamel(obj[key])
+      }
+      return obj
+    }
+  } else {
+    return data
+  }
+}
+
+function trans(str) {
+  let regex = /_(\w)(\w)/g
+  return str.replace(regex, function ($0, $1, $2) {
+    if (typeof $1 === 'number') {
+      return $0
+    }
+    return $1.toUpperCase() + $2
+  })
+}
